@@ -9,7 +9,8 @@ import itertools
 import math
 
 
-from tensorflow.keras.layers import Input, Dense, Flatten, Dropout, Embedding, multiply, LeakyReLU, BatchNormalization, LayerNormalization
+from tensorflow.keras.layers import Input, Dense, Flatten, Dropout, Embedding, \
+    multiply, LeakyReLU, BatchNormalization, LayerNormalization
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.optimizers.legacy import Adam
 import tensorflow.keras.backend as K
@@ -29,7 +30,9 @@ class RandomWeightedAverage(tf.keras.layers.Layer):
     Parameters:
     - batch_size: The batch size of the input samples.
 
-    This class inherits from the `tf.keras.layers.Layer` base class and implements the necessary methods to generate random weighted averages of input samples. It is commonly used in generative adversarial networks (GANs) during the training process.
+    This class inherits from the `tf.keras.layers.Layer` base class and implements 
+    the necessary methods to generate random weighted averages of input samples. 
+    It is commonly used in generative adversarial networks (GANs) during the training process.
 
     Example usage:
     layer = RandomWeightedAverage(batch_size)
@@ -56,7 +59,10 @@ class RandomWeightedAverage(tf.keras.layers.Layer):
         Returns:
         - weighted_averages: Randomly weighted averages of the input samples.
 
-        This method generates random weights using uniform distribution between 0 and 1. It then applies these weights to the input samples to calculate the weighted averages. The formula used is (alpha * input1) + ((1 - alpha) * input2), where alpha is the randomly generated weight.
+        This method generates random weights using uniform distribution between 0 and 1. 
+        It then applies these weights to the input samples to calculate the weighted averages. 
+        The formula used is (alpha * input1) + ((1 - alpha) * input2), where alpha is 
+        the randomly generated weight.
 
         Note: This method assumes the use of TensorFlow and imports `tf`.
 
@@ -76,7 +82,8 @@ class RandomWeightedAverage(tf.keras.layers.Layer):
         Returns:
         - output_shape: The shape of the output.
 
-        This method computes and returns the output shape of the layer, which is the same as the shape of the first input sample.
+        This method computes and returns the output shape of the layer, which is the same as 
+        the shape of the first input sample.
 
         Example usage:
         output_shape = layer.compute_output_shape(input_shape)
@@ -102,9 +109,13 @@ class WCGANGP():
     - pre_trained_on_training_rate: The rate at which pre-training was performed on the training set.
     - on_training_epoch: The epoch number for training.
 
-    This class implements the Wasserstein Conditional Generative Adversarial Network with Gradient Penalty (WCGAN-GP). It includes methods to build the generator and critic models, compute the gradient penalty loss, compile and train the models.
+    This class implements the Wasserstein Conditional Generative Adversarial Network with 
+    Gradient Penalty (WCGAN-GP). It includes methods to build the generator and critic models, 
+    compute the gradient penalty loss, compile and train the models.
 
-    The class initializes the WCGAN-GP model with the provided parameters. It also sets up the generator and critic models, defines the optimizer, and compiles the models with the appropriate loss functions.
+    The class initializes the WCGAN-GP model with the provided parameters. It also sets up 
+    the generator and critic models, defines the optimizer, and compiles the models with 
+    the appropriate loss functions.
 
     Example usage:
     wcgan = WCGANGP(x_train, y_train, latent_dim, batch_size, n_critic)
@@ -236,9 +247,17 @@ class WCGANGP():
         Returns:
         - gradient_penalty: The computed gradient penalty loss.
 
-        This function calculates the gradient penalty loss for a given batch of samples. It is commonly used in generative adversarial networks (GANs) to enforce smoothness in the learned model. The gradient penalty loss penalizes the model if the gradient of the discriminator with respect to the interpolated samples deviates from a target value.
+        This function calculates the gradient penalty loss for a given batch of samples. 
+        It is commonly used in generative adversarial networks (GANs) to enforce smoothness in 
+        the learned model. The gradient penalty loss penalizes the model if the gradient of 
+        the discriminator with respect to the interpolated samples deviates from a target value.
 
-        The function computes the gradients of the discriminator's predictions `y_pred` with respect to the `averaged_samples`. It then calculates the Euclidean norm of the gradients, which measures the magnitude of the gradients. The function applies the formula `lambda * (1 - ||grad||)^2` to each individual sample, where `lambda` is a hyperparameter and `||grad||` is the Euclidean norm of the gradients. Finally, the mean of the gradient penalties over the batch samples is returned as the loss.
+        The function computes the gradients of the discriminator's predictions `y_pred` with 
+        respect to the `averaged_samples`. It then calculates the Euclidean norm of the gradients, 
+        which measures the magnitude of the gradients. The function applies the formula 
+        `lambda * (1 - ||grad||)^2` to each individual sample, where `lambda` is a hyperparameter 
+        and `||grad||` is the Euclidean norm of the gradients. Finally, the mean of the gradient 
+        penalties over the batch samples is returned as the loss.
 
         Note: This function assumes the use of Keras backend (e.g., TensorFlow) and imports `K` from it.
 
@@ -274,9 +293,14 @@ class WCGANGP():
         Returns:
         - wasserstein_loss: The computed Wasserstein loss.
 
-        This function calculates the Wasserstein loss for a given batch of samples. It is commonly used in Wasserstein GANs (WGANs) to train the generator and discriminator. The Wasserstein loss measures the distance between the true and predicted label distributions, providing a more stable and meaningful training signal compared to traditional GAN losses.
+        This function calculates the Wasserstein loss for a given batch of samples. It is commonly 
+        used in Wasserstein GANs (WGANs) to train the generator and discriminator. The Wasserstein 
+        loss measures the distance between the true and predicted label distributions, providing 
+        a more stable and meaningful training signal compared to traditional GAN losses.
 
-        The function computes the element-wise product of `y_true` and `y_pred`, and then takes the mean of the resulting tensor. This represents the expectation over the joint distribution of the true and predicted labels. The resulting value is returned as the Wasserstein loss.
+        The function computes the element-wise product of `y_true` and `y_pred`, and then takes 
+        the mean of the resulting tensor. This represents the expectation over the joint distribution 
+        of the true and predicted labels. The resulting value is returned as the Wasserstein loss.
 
         Note: This function assumes the use of Keras backend (e.g., TensorFlow) and imports `K` from it.
 
@@ -294,11 +318,18 @@ class WCGANGP():
         Returns:
         - generator_model: The constructed generator model.
 
-        This function builds a generator model, which is responsible for generating synthetic data samples. The generator model typically takes random noise as input and outputs generated data samples.
+        This function builds a generator model, which is responsible for generating synthetic data samples. 
+        The generator model typically takes random noise as input and outputs generated data samples.
 
-        The generator model is constructed using a Sequential model from Keras. It consists of multiple dense (fully connected) layers with SELU activation functions, batch normalization, and dropout regularization. The output layer uses the sigmoid activation function to ensure the generated data samples are between 0 and 1.
+        The generator model is constructed using a Sequential model from Keras. It consists of multiple 
+        dense (fully connected) layers with SELU activation functions, batch normalization, and dropout 
+        regularization. The output layer uses the sigmoid activation function to ensure the generated 
+        data samples are between 0 and 1.
 
-        The noise and label inputs are defined using Keras Input layers. The label input is embedded into one-hot encoded vectors using an Embedding layer. The noise and embedded labels are then multiplied element-wise to create the model input. The generator model is then defined to take this model input and produce the generated data samples.
+        The noise and label inputs are defined using Keras Input layers. The label input is embedded 
+        into one-hot encoded vectors using an Embedding layer. The noise and embedded labels are then 
+        multiplied element-wise to create the model input. The generator model is then defined to take 
+        this model input and produce the generated data samples.
 
         Example usage:
         generator = build_generator()
@@ -351,9 +382,14 @@ class WCGANGP():
         Returns:
         - model: The built Critic model.
 
-        This method constructs the Critic model, which is commonly used in adversarial learning setups such as Generative Adversarial Networks (GANs). The Critic model evaluates the generated samples and provides a measure of their quality.
+        This method constructs the Critic model, which is commonly used in adversarial learning setups 
+        such as Generative Adversarial Networks (GANs). The Critic model evaluates the generated samples 
+        and provides a measure of their quality.
 
-        The Critic model is a feedforward neural network with several hidden layers. Each hidden layer consists of a dense layer with linear activation followed by a leaky rectified linear unit (LeakyReLU) activation function with a fixed negative slope (alpha=0.2). The output layer has a single node with linear activation.
+        The Critic model is a feedforward neural network with several hidden layers. Each hidden layer 
+        consists of a dense layer with linear activation followed by a leaky rectified linear unit (LeakyReLU) 
+        activation function with a fixed negative slope (alpha=0.2). The output layer has a single node 
+        with linear activation.
 
         The model architecture is as follows:
         - Input layer: Accepts samples with dimension `self.data_dim`.
@@ -366,11 +402,15 @@ class WCGANGP():
         - `generated_sample`: Artificial data input of shape `self.data_dim`.
         - `label`: Label input of shape (1,) with data type "int32".
 
-        The `label` input is embedded as a one-hot vector using an Embedding layer, which maps each label to a vector representation. The label embedding is then flattened. The generated sample is multiplied element-wise with the label embedding to obtain the input for the Critic model.
+        The `label` input is embedded as a one-hot vector using an Embedding layer, which maps each label 
+        to a vector representation. The label embedding is then flattened. The generated sample is multiplied 
+        element-wise with the label embedding to obtain the input for the Critic model.
 
-        Finally, the Critic model is constructed using the defined inputs and the validity output is obtained by passing the model input through the constructed model. The resulting model is returned.
+        Finally, the Critic model is constructed using the defined inputs and the validity output is obtained 
+        by passing the model input through the constructed model. The resulting model is returned.
 
-        Note: This method assumes the use of Keras and imports required classes and functions such as `Sequential`, `Dense`, `LeakyReLU`, `Embedding`, `Input`, `Flatten`, and `multiply`.
+        Note: This method assumes the use of Keras and imports required classes and functions such 
+        as `Sequential`, `Dense`, `LeakyReLU`, `Embedding`, `Input`, `Flatten`, and `multiply`.
 
         Example usage:
         critic = build_critic()
@@ -418,19 +458,29 @@ class WCGANGP():
         Parameters:
         - epochs: The number of training epochs.
 
-        This method trains the WCGAN model by iterating over the specified number of epochs. It performs the training in batches, with each batch consisting of real samples and generated samples.
+        This method trains the WCGAN model by iterating over the specified number of epochs. It performs 
+        the training in batches, with each batch consisting of real samples and generated samples.
 
-        The method initializes the training set and sets the adversarial ground truths for the discriminator. It calculates the number of batches based on the training data size and batch size. It also handles any overhead data that does not fit into complete batches.
+        The method initializes the training set and sets the adversarial ground truths for the discriminator. 
+        It calculates the number of batches based on the training data size and batch size. It also handles 
+        any overhead data that does not fit into complete batches.
 
-        Within each epoch, the method resets the training set and selects random overhead rows that do not fit into batches. It removes these random overhead rows from the training set. The training data is then split into batches for processing.
+        Within each epoch, the method resets the training set and selects random overhead rows that do not fit 
+        into batches. It removes these random overhead rows from the training set. The training data is then 
+        split into batches for processing.
 
-        For each batch, the method performs training on the critic model by training the discriminator using real samples, generated samples, and noise. It repeats the training process for a specified number of critic steps (`n_critic`).
+        For each batch, the method performs training on the critic model by training the discriminator using 
+        real samples, generated samples, and noise. It repeats the training process for a specified number 
+        of critic steps (`n_critic`).
 
-        After training the critic, the method generates a sample of artificial labels and trains the generator model using the generated noise and labels.
+        After training the critic, the method generates a sample of artificial labels and trains the generator 
+        model using the generated noise and labels.
 
-        The losses for both the discriminator and generator are recorded in `self.losslog`. The current epoch's critic loss (`d_loss`) and generator loss (`g_loss`) are also printed for monitoring.
+        The losses for both the discriminator and generator are recorded in `self.losslog`. The current epoch's 
+        critic loss (`d_loss`) and generator loss (`g_loss`) are also printed for monitoring.
 
-        The method updates the `self.history` dictionary with the critic loss and generator loss for each epoch. If the WCGAN model was pre-trained on training data, the method performs pre-training based on the specified rate.
+        The method updates the `self.history` dictionary with the critic loss and generator loss for each epoch. 
+        If the WCGAN model was pre-trained on training data, the method performs pre-training based on the specified rate.
 
         Example usage:
         wcgan = WCGAN()
@@ -510,7 +560,8 @@ class WCGANGP():
         """
         Plots the training history of a WCGAN model.
 
-        This method plots the generator and critic loss values recorded during the training process. It provides insights into the model's learning progress and the convergence of the generator and critic.
+        This method plots the generator and critic loss values recorded during the training process. 
+        It provides insights into the model's learning progress and the convergence of the generator and critic.
 
         Example usage:
         wcgan.plot_history()
@@ -531,17 +582,25 @@ class WCGANGP():
         Parameters:
         - on_training (bool): Flag indicating if pre-training is performed during the main training phase. Default is False.
 
-        This method performs pre-training of the Generator and Critic models. It includes multiple iterations of training the Generator and Critic models alternatively.
+        This method performs pre-training of the Generator and Critic models. It includes multiple iterations 
+        of training the Generator and Critic models alternatively.
 
-        During each iteration, the Generator is trained with the Huber loss and Adam optimizer. Random noise data is generated, and the Generator is fit to map this noise data and original labels to the original input data. The fit is performed for a fraction of the epoch count.
+        During each iteration, the Generator is trained with the Huber loss and Adam optimizer. Random noise 
+        data is generated, and the Generator is fit to map this noise data and original labels to the original 
+        input data. The fit is performed for a fraction of the epoch count.
 
-        After training the Generator, a subset of the original data is sampled by removing a random overhead of samples. The remaining data is used to train the Critic model. The Critic model is fit using the Wasserstein loss and three sets of labels: valid, fake, and dummy. The fit is performed for another fraction of the epoch count.
+        After training the Generator, a subset of the original data is sampled by removing a random overhead 
+        of samples. The remaining data is used to train the Critic model. The Critic model is fit using the 
+        Wasserstein loss and three sets of labels: valid, fake, and dummy. The fit is performed for another 
+        fraction of the epoch count.
 
         At the end of each iteration, the Generator and Critic losses are printed.
 
-        If `on_training` is True, the pre-training is performed as part of the main training phase. Otherwise, the pre-training iteration and epoch counts are used.
+        If `on_training` is True, the pre-training is performed as part of the main training phase. Otherwise, 
+        the pre-training iteration and epoch counts are used.
 
-        Note: This method assumes the use of certain attributes and parameters that are not explicitly defined within the code provided.
+        Note: This method assumes the use of certain attributes and parameters that are not explicitly defined 
+        within the code provided.
 
         Example usage:
         pre_training()  # Perform pre-training during the main training phase
@@ -609,17 +668,26 @@ class WCGANGP():
         - generated_data: The generated synthetic data samples.
         - generated_labels: The corresponding labels for the generated data.
 
-        This function generates synthetic data samples using the WCGAN (Wasserstein Conditional Generative Adversarial Network) generator. It takes an input parameter `n` specifying the number of synthetic samples to generate.
+        This function generates synthetic data samples using the WCGAN (Wasserstein Conditional Generative Adversarial Network) 
+        generator. It takes an input parameter `n` specifying the number of synthetic samples to generate.
 
-        The function starts by creating a copy of the original training labels `tmp_y_train`. It then calculates the distribution ratio of each label in the dataset, storing the results in the `label_ratios` dictionary. This ratio represents the proportion of each label in the original dataset.
+        The function starts by creating a copy of the original training labels `tmp_y_train`. It then 
+        calculates the distribution ratio of each label in the dataset, storing the results in the `label_ratios` 
+        dictionary. This ratio represents the proportion of each label in the original dataset.
 
-        Next, the function generates random noise using a normal distribution with mean 0 and standard deviation 1. The shape of the noise is `(n, self.latent_dim)`.
+        Next, the function generates random noise using a normal distribution with mean 0 and standard deviation 1. 
+        The shape of the noise is `(n, self.latent_dim)`.
 
-        The function proceeds to create synthetic data samples by sampling labels based on the label ratios. It uses a list comprehension with `round(ratio*n)` to determine the number of samples for each label. The resulting list of sampled labels is flattened using `itertools.chain` and converted into a numpy array.
+        The function proceeds to create synthetic data samples by sampling labels based on the label ratios. 
+        It uses a list comprehension with `round(ratio*n)` to determine the number of samples for each label. 
+        The resulting list of sampled labels is flattened using `itertools.chain` and converted into a numpy array.
 
-        Finally, the WCGAN generator is used to generate artificial data samples by passing the generated noise and sampled labels as inputs to the generator's `predict` method. The function returns the generated data samples (`generated_data`) and the corresponding labels (`generated_labels`) as a tuple.
+        Finally, the WCGAN generator is used to generate artificial data samples by passing the generated noise 
+        and sampled labels as inputs to the generator's `predict` method. The function returns the generated 
+        data samples (`generated_data`) and the corresponding labels (`generated_labels`) as a tuple.
 
-        Note: This function assumes the existence of a WCGAN generator object and requires the import of necessary libraries (e.g., `numpy`, `itertools`).
+        Note: This function assumes the existence of a WCGAN generator object and requires the import of necessary 
+        libraries (e.g., `numpy`, `itertools`).
 
         Example usage:
         generated_data, generated_labels = generate_data(1000)
@@ -652,11 +720,16 @@ class WCGANGP():
         - prefix_name (str): Optional prefix name to prepend to the saved model files. Default is None.
         - path (str): Path to the directory where the models should be saved. Default is "./".
 
-        This method saves the generator and critic models of a GAN to disk. The saved models can be later loaded and used for generating new samples or further training.
+        This method saves the generator and critic models of a GAN to disk. The saved models can be later 
+        loaded and used for generating new samples or further training.
 
-        The method first creates a directory to store the saved models, if it does not exist already. The directory is created at the specified `path` or "./" by default.
+        The method first creates a directory to store the saved models, if it does not exist already. 
+        The directory is created at the specified `path` or "./" by default.
 
-        Next, the generator and critic models are saved in the models directory. The saved model files have names in the format "{prefix_name}_generator.h5" and "{prefix_name}_critic.h5", where `prefix_name` is an optional prefix string provided as an argument to the method. If no prefix name is provided, the default names "generator.h5" and "critic.h5" are used.
+        Next, the generator and critic models are saved in the models directory. The saved model files have 
+        names in the format "{prefix_name}_generator.h5" and "{prefix_name}_critic.h5", where `prefix_name` is 
+        an optional prefix string provided as an argument to the method. If no prefix name is provided, 
+        the default names "generator.h5" and "critic.h5" are used.
 
         Example usage:
         gan.save_model(prefix_name="my_gan", path="./saved_models/")
@@ -678,13 +751,17 @@ class WCGANGP():
         - prefix_name: The prefix name used for the saved model files. Default is None.
         - path: The path to the directory where the models are saved. Default is "./".
 
-        This method loads the generator and critic models from saved files. The saved models are assumed to be in the specified directory (`path`) with the provided prefix name (`prefix_name`) appended to the filenames.
+        This method loads the generator and critic models from saved files. The saved models are assumed to be 
+        in the specified directory (`path`) with the provided prefix name (`prefix_name`) appended to the filenames.
 
-        The method first constructs the directory path for the models based on the specified `path`. It then checks if the directory exists and raises a `ValueError` if it doesn't.
+        The method first constructs the directory path for the models based on the specified `path`. It then 
+        checks if the directory exists and raises a `ValueError` if it doesn't.
 
-        Next, it loads the generator model by calling `tf.keras.models.load_model()` with the path to the generator model file. The file name is constructed by appending "_generator.h5" to the prefix name.
+        Next, it loads the generator model by calling `tf.keras.models.load_model()` with the path to the generator 
+        model file. The file name is constructed by appending "_generator.h5" to the prefix name.
 
-        Similarly, the method loads the critic model by calling `tf.keras.models.load_model()` with the path to the critic model file. The file name is constructed by appending "_critic.h5" to the prefix name.
+        Similarly, the method loads the critic model by calling `tf.keras.models.load_model()` with the path to 
+        the critic model file. The file name is constructed by appending "_critic.h5" to the prefix name.
 
         Note: This method assumes the use of TensorFlow and imports the `os` and `tf` modules.
 
